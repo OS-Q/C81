@@ -101,19 +101,46 @@ function make_pi3()
 	if [ ! -d $WorkPath/linux ]; then		
 		pi3_config
 		cd $HOME/raspbian/linux
-		make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
+		make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs -j$(nproc)
 	else
 		echo -e "you should run update src first !\n${Line}"
 	fi
 }
 
+function update_image()
+{
+	if [ ! -d $WorkPath/linux ]; then
+		cd $HOME/raspbian/linux		
+		sudo make INSTALL_MOD_PATH=/mnt/ext4 modules_install
+		if [ ! -b /dev/sdd1 ]; then
+		    	if [ ! -d /mnt/fat32 ]; then
+				mkdir /mnt/fat32 
+		    	fi
+	 		if [ ! -d /mnt/ext4 ]; then
+				mkdir /mnt/ext4 
+		    	fi
+			sudo mount /dev/sdd1 /mnt/fat32
+			sudo mount /dev/sdd2 /mnt/ext4
+			sudo scripts/mkknlimg arch/arm/boot/zImage /mnt/fat32/$KERNEL.img
+			sudo cp arch/arm/boot/dts/*.dtb /mnt/fat32/
+			sudo cp arch/arm/boot/dts/overlays/*.dtb* /mnt/fat32/overlays/
+		else
+			echo -e "please connect your SD card !\n${Line}"
+		fi		
+	else
+		echo -e "flash image to tfcard !\n${Line}"
+	fi
+}
 
+
+
+sudo cp arch/arm/boot/dts/overlays/README /mnt/fat32/overlays/
 OPTION=$(whiptail --title "Raspbian build system" \
 	--menu "$MENUSTR" 20 60 12 --cancel-button Finish --ok-button Select \
 	"0"   "AUTO all" \
 	"1"   "update src" \
 	"2"   "make for pi3" \
-	"3"   "flash image" \
+	"3"   "update image" \
 	3>&1 1>&2 2>&3)
 
 
@@ -140,8 +167,8 @@ elif [ $OPTION = '2' ]; then
 	exit 0
 elif [ $OPTION = '3' ]; then
 	clear
-	echo -e "flash image\n${Line}"
-
+	echo -e "update image\n${Line}"
+	update_image
 	exit 0	
 else
 	whiptail --title "Raspbian build system" \
