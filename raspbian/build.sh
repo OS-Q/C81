@@ -33,12 +33,38 @@ function apt_install()
 	sudo apt autoremove -y 
 }
 
-function pi3_config()
+function pi0_config()
 {
-	KERNEL=kernel7
-	make bcm2709_defconfig
+	if [ ! -d $WorkPath/linux ]; then
+		cd $HOME/raspbian/linux
+		KERNEL=kernel
+		make bcmrpi_defconfig
+	else
+		echo -e "you should run update src first !\n${Line}"
+	fi
 }
 
+function pi3_config()
+{
+	if [ ! -d $WorkPath/linux ]; then
+		cd $HOME/raspbian/linux
+		KERNEL=kernel7
+		make bcm2709_defconfig
+	else
+		echo -e "you should run update src first !\n${Line}"
+	fi
+}
+
+function pi4_config()
+{
+	if [ ! -d $WorkPath/linux ]; then
+		cd $HOME/raspbian/linux
+		KERNEL=kernel7l
+		make bcm2711_defconfig
+	else
+		echo -e "you should run update src first !\n${Line}"
+	fi
+}
 
 function get_gcc()
 {
@@ -57,9 +83,15 @@ function get_gcc()
 	fi
 }
 
-function make_all()
+function make_pi3()
 {
-	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
+	if [ ! -d $WorkPath/linux ]; then		
+		pi3_config
+		cd $HOME/raspbian/linux
+		make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
+	else
+		echo -e "you should run update src first !\n${Line}"
+	fi
 }
 
 
@@ -67,7 +99,7 @@ OPTION=$(whiptail --title "Raspbian build system" \
 	--menu "$MENUSTR" 20 60 12 --cancel-button Finish --ok-button Select \
 	"0"   "AUTO all" \
 	"1"   "update src" \
-	"2"   "make all" \
+	"2"   "make for pi3" \
 	"3"   "flash image" \
 	3>&1 1>&2 2>&3)
 
@@ -87,8 +119,8 @@ elif [ $OPTION = '1' ]; then
 	exit 0
 elif [ $OPTION = '2' ]; then
 	clear
-	echo -e "make all\n${Line}"
-
+	echo -e "make pi3\n${Line}"
+	make_pi3
 	exit 0
 elif [ $OPTION = '3' ]; then
 	clear
