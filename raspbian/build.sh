@@ -110,20 +110,22 @@ function make_pi3()
 function update_image()
 {
 	if [ ! -d $WorkPath/linux ]; then
-		cd $HOME/raspbian/linux		
-		sudo make INSTALL_MOD_PATH=/mnt/ext4 modules_install
-		if [ ! -b /dev/sdd1 ]; then
-		    	if [ ! -d /mnt/fat32 ]; then
-				mkdir /mnt/fat32 
+		cd $HOME/raspbian/linux				
+		if [ -b /dev/sdd1 -a -b /dev/sdd2 ]; then
+		    	if [ ! -d mnt/fat32 ]; then
+				mkdir mnt/fat32 
 		    	fi
-	 		if [ ! -d /mnt/ext4 ]; then
-				mkdir /mnt/ext4 
+	 		if [ ! -d mnt/ext4 ]; then
+				mkdir mnt/ext4 
 		    	fi
-			sudo mount /dev/sdd1 /mnt/fat32
-			sudo mount /dev/sdd2 /mnt/ext4
-			sudo scripts/mkknlimg arch/arm/boot/zImage /mnt/fat32/$KERNEL.img
-			sudo cp arch/arm/boot/dts/*.dtb /mnt/fat32/
-			sudo cp arch/arm/boot/dts/overlays/*.dtb* /mnt/fat32/overlays/
+			sudo mount /dev/sdd1 mnt/fat32
+			sudo mount /dev/sdd2 mnt/ext4
+			sudo cp mnt/fat32/$KERNEL.img mnt/fat32/$KERNEL-backup.img
+			sudo cp arch/arm/boot/zImage mnt/fat32/$KERNEL.img
+			sudo make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=mnt/ext4 modules_install
+			sudo scripts/mkknlimg arch/arm/boot/zImage mnt/fat32/$KERNEL.img
+			sudo cp arch/arm/boot/dts/*.dtb mnt/fat32/
+			sudo cp arch/arm/boot/dts/overlays/*.dtb* mnt/fat32/overlays/
 		else
 			echo -e "please connect your SD card !\n${Line}"
 		fi		
@@ -134,7 +136,7 @@ function update_image()
 
 
 
-sudo cp arch/arm/boot/dts/overlays/README /mnt/fat32/overlays/
+sudo cp arch/arm/boot/dts/overlays/README mnt/fat32/overlays/
 OPTION=$(whiptail --title "Raspbian build system" \
 	--menu "$MENUSTR" 20 60 12 --cancel-button Finish --ok-button Select \
 	"0"   "AUTO all" \
