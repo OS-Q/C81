@@ -7,21 +7,13 @@ function get_raspbian_gcc()
     	if [ ! -d $WorkPath ]; then
 		mkdir $WorkPath
     	fi
-    	if [ ! -f $WorkPath/xtensa-lx106-elf.tar.gz ]; then
+    	if [ ! -d $WorkPath/tools ]; then
         	cd $WorkPath
-		wget -O xtensa-lx106-elf.tar.gz https://dl.espressif.com/dl/xtensa-lx106-elf-linux64-1.22.0-92-g8facf4c-5.2.0.tar.gz
+		git clone --depth=1 https://github.com/raspberrypi/tools
     	fi
-	if [ ! -d  $WorkPath/xtensa-lx106-elf/bin ]; then
-        	cd $WorkPath
-		mkdir xtensa-lx106-elf
-		tar -xzvf $shellPath/xtensa-lx106-elf.tar.gz  -C xtensa-lx106-elf --strip-components 1 
-		echo -e "finish esp8266 xtensa-lx106-elf \n${Line}"   	
-	else
-		echo -e "exist esp8266 xtensa-lx106-elf \n${Line}"
-	fi
-	if [ -d  $WorkPath/xtensa-lx106-elf/bin ]; then
-		echo 'export PATH='$WorkPath'/xtensa-lx106-elf/bin:$PATH' >> ~/.bashrc
-		echo -e "export xtensa-lx106-elf path\n${Line}"   	
+	if [ -d  $WorkPath/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin ]; then
+		echo 'export PATH='$WorkPath'/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin:$PATH' >> ~/.bashrc
+		echo -e "export gcc-linaro-arm-linux-gnueabihf-raspbian-x64 path\n${Line}"   	
 	fi	
 }
 

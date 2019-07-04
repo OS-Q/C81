@@ -29,7 +29,7 @@ echo $PASSWD | sudo ls &> /dev/null 2>&1
 
 function apt_install()
 {
-	sudo apt install -y git bc bison flex libssl-dev
+	sudo apt install -y git bison flex libssl-dev
 	sudo apt autoremove -y 
 }
 
@@ -39,54 +39,27 @@ function pi3_config()
 	make bcm2709_defconfig
 }
 
-function set_esp8266_gcc()
+
+function get_gcc()
 {
-	str="xtensa-lx106-elf-cc :  "
-	ret=`whereis xtensa-lx106-elf-cc`
+	str="arm-linux-gnueabihf-gcc-ar :    "
+	ret=`whereis arm-linux-gnueabihf-gcc-ar`
 	if [ ${#ret} -lt ${#str} ]; then
-		if [ -f  $WorkPath/scripts/xtensa-lx106.sh ]; then
-			chmod +x $WorkPath/scripts/xtensa-lx106.sh
-			$WorkPath/scripts/xtensa-lx106.sh
+		if [ -f  $WorkPath/scripts/toolchain.sh ]; then
+			chmod +x $WorkPath/scripts/toolchain.sh
+			$WorkPath/scripts/toolchain.sh 
 			source  ~/.bashrc
 		else
-			echo -e "no exist xtensa-lx106.sh \n${Line}"
+			echo -e "no shell toolchain.sh \n${Line}"
 		fi
 	else
-		echo -e "have config xtensa-lx106 gcc\n${Line}"
+		echo -e "done config toolchain gcc\n${Line}"
 	fi
 }
 
-function set_esp32_gcc()
+function make_all()
 {
-	str="xtensa-esp32-elf-cc :    "
-	ret=`whereis xtensa-esp32-elf-cc`
-	if [ ${#ret} -lt ${#str} ]; then
-		if [ -f  $WorkPath/scripts/xtensa-esp32.sh ]; then
-			chmod +x $WorkPath/scripts/xtensa-esp32.sh
-			$WorkPath/scripts/xtensa-esp32.sh 
-			source  ~/.bashrc
-		else
-			echo -e "no shell xtensa-esp32.sh \n${Line}"
-		fi
-	else
-		echo -e "have config xtensa-esp32 gcc\n${Line}"
-	fi
-}
-function set_esp_idf()
-{
-	if [ -f  $WorkPath/scripts/esp_idf.sh ]; then
-		chmod +x $WorkPath/scripts/esp_idf.sh
-		$WorkPath/scripts/esp_idf.sh
-		source  ~/.bashrc
-    	fi
-}
-function set_esp8266_rtos()
-{
-	if [ -f  $WorkPath/scripts/esp8266_rtos.sh ]; then
-		chmod +x $WorkPath/scripts/esp8266_rtos.sh
-		$WorkPath/scripts/esp8266_rtos.sh 
-		source  ~/.bashrc
-    	fi
+	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- zImage modules dtbs
 }
 
 
