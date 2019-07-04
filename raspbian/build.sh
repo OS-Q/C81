@@ -26,16 +26,17 @@ done
 
 echo $PASSWD | sudo ls &> /dev/null 2>&1
 
-function port_config()
-{
-	sudo usermod -a -G dialout $USER 
-}
+
 function apt_install()
 {
-	sudo apt install -y gcc wget make flex bison gperf gawk grep
-	sudo apt install -y gettext automake flex texinfo libtool libtool-bin libncurses-dev 
-	sudo apt install -y python python-dev python-pip python-setuptools python-serial python-cryptography python-future
+	sudo apt install -y git bc bison flex libssl-dev
 	sudo apt autoremove -y 
+}
+
+function pi3_config()
+{
+	KERNEL=kernel7
+	make bcm2709_defconfig
 }
 
 function set_esp8266_gcc()
@@ -91,10 +92,10 @@ function set_esp8266_rtos()
 
 OPTION=$(whiptail --title "Raspbian build system" \
 	--menu "$MENUSTR" 20 60 12 --cancel-button Finish --ok-button Select \
-	"0"   "AUTO ESP8266" \
-	"1"   "AUTO ESP32" \
-	"2"   "GCC tools" \
-	"3"   "esp-idf" \
+	"0"   "AUTO all" \
+	"1"   "update src" \
+	"2"   "make all" \
+	"3"   "flash image" \
 	3>&1 1>&2 2>&3)
 
 # config port user mod	
@@ -103,26 +104,23 @@ port_config
 
 if [ $OPTION = '0' ]; then
 	clear
-	echo -e "AUTO ESP8266\n${Line}"
-	set_esp8266_gcc
-	set_esp8266_rtos	
+	echo -e "AUTO all\n${Line}"
+
 	exit 0
 elif [ $OPTION = '1' ]; then
 	clear
-	echo -e "AUTO ESP32\n${Line}"
-	set_esp32_gcc
-	set_esp_idf
+	echo -e "update src\n${Line}"
+
 	exit 0
 elif [ $OPTION = '2' ]; then
 	clear
-	echo -e "GCC tools\n${Line}"
-	set_esp8266_gcc
-	set_esp32_gcc
+	echo -e "make all\n${Line}"
+
 	exit 0
 elif [ $OPTION = '3' ]; then
 	clear
-	echo -e "esp-idf\n${Line}"
-	set_esp_idf
+	echo -e "flash image\n${Line}"
+
 	exit 0	
 else
 	whiptail --title "Raspbian build system" \
