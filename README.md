@@ -1,23 +1,12 @@
-﻿# [RPi](https://github.com/mcuyun/RPi) 
+﻿# [raspberry Pi3](https://github.com/sochub/raspberryPi3) 
+[![sites](SoC/SoC.png)](http://www.qitas.cn) 
+#### 架构：[cortex A53](https://github.com/sochub/CA53)
 
-[![sites](mcuyun/mcuyun.png)](http://www.mcuyun.com)
+## [raspberry Pi3简介](https://github.com/sochub/raspberryPi3/wiki) 
 
-#### 归属：[cortex A53系列](https://github.com/mcuyun/CA53)
-#### [关于悠云](https://github.com/mcuyun)可访问 www.mcuyun.com
+raspberry Pi是风靡全球的开源SBC设备，全球第三大个人PC设备，拥有丰富的软硬件生态。
 
-## [描述](https://github.com/mcuyun/RPi/wiki) 
 
-RPi 3是一款风靡全球的开源计算设备，拥有不错的性能和资源，逐渐成为arm在各个软件平台支持上的代表。
-
-### [组成](mcuyun/)
-
-#### [文档](docs/)
-
-包括芯片手册资料和硬件参考设计
-
----
-
-###  [悠云，为嵌入式](http://www.mcuyun.com)   
-###  qitas@qitas.cn
+###  [SoC资源平台](http://www.qitas.cn)  
 
 
