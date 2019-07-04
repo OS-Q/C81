@@ -33,6 +33,35 @@ function apt_install()
 	sudo apt autoremove -y 
 }
 
+function get_gcc()
+{
+	str="arm-linux-gnueabihf-gcc-ar :    "
+	ret=`whereis arm-linux-gnueabihf-gcc-ar`
+	if [ ${#ret} -lt ${#str} ]; then
+		if [ -f  $WorkPath/scripts/toolchain.sh ]; then
+			chmod +x $WorkPath/scripts/toolchain.sh
+			$WorkPath/scripts/toolchain.sh 
+			source  ~/.bashrc
+		else
+			echo -e "no shell : toolchain.sh \n${Line}"
+		fi
+	else
+		echo -e "done config toolchain gcc\n${Line}"
+	fi
+}
+
+function get_src()
+{
+
+	if [ -f  $WorkPath/scripts/linux.sh ]; then
+		chmod +x $WorkPath/scripts/linux.sh
+		$WorkPath/scripts/linux.sh 
+	else
+		echo -e "no shell : linux.sh \n${Line}"
+	fi
+
+}
+
 function pi0_config()
 {
 	if [ ! -d $WorkPath/linux ]; then
@@ -66,22 +95,6 @@ function pi4_config()
 	fi
 }
 
-function get_gcc()
-{
-	str="arm-linux-gnueabihf-gcc-ar :    "
-	ret=`whereis arm-linux-gnueabihf-gcc-ar`
-	if [ ${#ret} -lt ${#str} ]; then
-		if [ -f  $WorkPath/scripts/toolchain.sh ]; then
-			chmod +x $WorkPath/scripts/toolchain.sh
-			$WorkPath/scripts/toolchain.sh 
-			source  ~/.bashrc
-		else
-			echo -e "no shell toolchain.sh \n${Line}"
-		fi
-	else
-		echo -e "done config toolchain gcc\n${Line}"
-	fi
-}
 
 function make_pi3()
 {
@@ -103,19 +116,22 @@ OPTION=$(whiptail --title "Raspbian build system" \
 	"3"   "flash image" \
 	3>&1 1>&2 2>&3)
 
-# config port user mod	
+
 apt_install
-port_config
+
 
 if [ $OPTION = '0' ]; then
 	clear
 	echo -e "AUTO all\n${Line}"
-
+	get_gcc
+	get_src
+	make_pi3
 	exit 0
 elif [ $OPTION = '1' ]; then
 	clear
 	echo -e "update src\n${Line}"
-
+	get_gcc
+	get_src
 	exit 0
 elif [ $OPTION = '2' ]; then
 	clear
