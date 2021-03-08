@@ -1,15 +1,9 @@
-﻿# [raspberry Pi3](https://github.com/sochub/raspberryPi3) 
-[![sites](SoC/SoC.png)](http://www.qitas.cn) 
-#### 架构：[cortex A53](https://github.com/sochub/CA53)
+﻿# [T81](https://github.com/OS-Q/T81)
 
-## [raspberry Pi3简介](https://github.com/sochub/raspberryPi3/wiki) 
+[![sites](http://182.61.61.133/link/resources/OSQ.png)](http://www.OS-Q.com)
 
-raspberry Pi是风靡全球的开源SBC设备，全球第三大个人PC设备，拥有丰富的软硬件生态。
+### [简介](https://github.com/OS-Q/T81/wiki)
 
-### 官方资源：
+[T81](https://github.com/OS-Q/T81)
 
-https://github.com/raspberrypi
-
-###  [SoC资源平台](http://www.qitas.cn)  
-
-
+### [Q = (OpenSource & OperatingSystem) ](http://www.OS-Q.com)
